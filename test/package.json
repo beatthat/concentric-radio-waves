@@ -1,0 +1,25 @@
+{
+  "name": "tests",
+  "version": "0.0.1",
+  "description": "",
+  "author": "",
+  "license": "MIT",
+  "scripts": {
+    "clean": "rm -rf node_modules package-lock.json yarn.lock Library Temp Assets",
+    "cp2src": "node ./scripts/cp2src.js",
+    "overwrite2src": "node ./scripts/overwrite2src.js",
+    "unity2clone-overwrite": "./node_modules/.bin/unity2clone-overwrite",
+    "overwrite2clone": "./node_modules/.bin/overwrite2clone"
+  },
+  "dependencies": {
+    "concentric-radio-waves": "../concentric-radio-waves-latest.tgz"
+  },
+  "devDependencies": {
+    "babel-core": "^5.8.23",
+    "colors": "^1.1.2",
+    "gulp": "^3.9.0",
+    "gulp-unity": "shadowmint/gulp-unity#1.0.0",
+    "run-sequence": "^1.1.2",
+    "xml2js": "^0.4.15"
+  }
+}
