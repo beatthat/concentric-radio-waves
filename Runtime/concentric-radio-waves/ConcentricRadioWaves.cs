@@ -8,42 +8,77 @@ namespace BeatThat
     /// The rendering is all handled by the ConcentricRadioWaves shader/material, 
     /// but if you want the effect to be Pausable, attach this component
     /// </summary>
+    [ExecuteInEditMode]
     public class ConcentricRadioWaves : MonoBehaviour
-	{
-		public bool m_pause;
-		public HasMaterial m_hasMaterial;
+    {
+        public bool m_pause;
+        public HasMaterial m_hasMaterial;
 
-		public void OnPause (bool p)
-		{
-			this.isPaused = p;
-		}
+        public void OnPause(bool p)
+        {
+            this.isPaused = p;
+        }
 
-		// Analysis disable ConvertToAutoProperty
-		public bool isPaused { get { return m_pause; } set { m_pause = value; } }
-		// Analysis restore ConvertToAutoProperty
+        // Analysis disable ConvertToAutoProperty
+        public bool isPaused { get { return m_pause; } set { m_pause = value; } }
+        // Analysis restore ConvertToAutoProperty
 
-		private HasMaterial hasMaterial { get { return (m_hasMaterial = HasMaterial.FindOrAdd(this.gameObject)); } }
+        private HasMaterial hasMaterial { get { return (m_hasMaterial = HasMaterial.FindOrAdd(this.gameObject)); } }
 
-		void Start()
-		{
-			if(this.material == null) {
-				this.material = Instantiate(this.hasMaterial.material);
-				this.hasMaterial.material = this.material;
-			}
-		}
+#if UNITY_EDITOR
+        void OnEnable()
+        {
+            if(!Application.isPlaying) {
+                UnityEditor.EditorApplication.update += this.Update;
+            }
+        }
 
-		private float time { get; set; }
+        void OnDisable()
+        {
+            if (!Application.isPlaying)
+            {
+                UnityEditor.EditorApplication.update -= this.Update;
+            }
+        }
+#endif
+        void Start()
+        {
+            if (this.material == null)
+            {
+                this.material = Application.isPlaying ? Instantiate(this.hasMaterial.material) : this.hasMaterial.material;
+                this.hasMaterial.material = this.material;
+            }
+        }
 
-		void Update()
-		{
-			if(this.isPaused) { return; }
+        private float time { get; set; }
 
-			this.time += Time.deltaTime;
+        void Update()
+        {
+            if (this.isPaused) { return; }
+
+#if UNITY_EDITOR
+            if(Application.isPlaying) {
+                this.time += Time.deltaTime;
+            }
+            else {
+                Debug.Log("[" + System.DateTime.Now);
+                if(m_lastTime.HasValue) {
+                    this.time += (float)(System.DateTime.Now - m_lastTime.Value).TotalSeconds;
+                }
+                m_lastTime = System.DateTime.Now;
+            }
+#else
+            this.time += Time.deltaTime;
+#endif
 
 			this.material.SetFloat("_OverrideTime", this.time);
 		}
-			
-		private Material material { get; set; }
+
+#if UNITY_EDITOR
+        private System.DateTime? m_lastTime;
+#endif
+
+        private Material material { get; set; }
 	}
 }
 
