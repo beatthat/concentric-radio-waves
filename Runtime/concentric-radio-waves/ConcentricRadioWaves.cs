@@ -5,7 +5,7 @@ namespace BeatThat
 {
     /// <summary>
     /// ConcentricRadioWaves is just a kind of loading animation (draws concentric radio waves eminating outwards)
-    /// The rendering is all handled by the ConcentricRadioWaves shader/material,
+    /// The rendering is all handled by the ConcentricRadioWaves shader/material, 
     /// but if you want the effect to be Pausable, attach this component
     /// </summary>
     [ExecuteInEditMode]
@@ -28,6 +28,7 @@ namespace BeatThat
 #if UNITY_EDITOR
         void OnEnable()
         {
+            SetupMaterial();
             if(!Application.isPlaying) {
                 UnityEditor.EditorApplication.update += this.Update;
             }
@@ -35,15 +36,26 @@ namespace BeatThat
 
         void OnDisable()
         {
+            this.material = null;
             if (!Application.isPlaying)
             {
                 UnityEditor.EditorApplication.update -= this.Update;
             }
         }
+
+        private void OnValidate()
+        {
+            SetupMaterial(true);
+        }
 #endif
         void Start()
         {
-            if (this.material == null)
+            SetupMaterial();
+        }
+
+        private void SetupMaterial(bool force = false)
+        {
+            if (this.material == null || force)
             {
                 this.material = Application.isPlaying ? Instantiate(this.hasMaterial.material) : this.hasMaterial.material;
                 this.hasMaterial.material = this.material;
@@ -80,3 +92,4 @@ namespace BeatThat
         private Material material { get; set; }
 	}
 }
+
