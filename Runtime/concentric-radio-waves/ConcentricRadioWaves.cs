@@ -5,7 +5,7 @@ namespace BeatThat
 {
     /// <summary>
     /// ConcentricRadioWaves is just a kind of loading animation (draws concentric radio waves eminating outwards)
-    /// The rendering is all handled by the ConcentricRadioWaves shader/material, 
+    /// The rendering is all handled by the ConcentricRadioWaves shader/material,
     /// but if you want the effect to be Pausable, attach this component
     /// </summary>
     [ExecuteInEditMode]
@@ -61,7 +61,6 @@ namespace BeatThat
                 this.time += Time.deltaTime;
             }
             else {
-                Debug.Log("[" + System.DateTime.Now);
                 if(m_lastTime.HasValue) {
                     this.time += (float)(System.DateTime.Now - m_lastTime.Value).TotalSeconds;
                 }
@@ -81,4 +80,3 @@ namespace BeatThat
         private Material material { get; set; }
 	}
 }
-
